@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-ICSF Photo Info Tool - Full EXIF Metadata Extractor
-Developed by Somser SA
-"""
 
 import sys
 import subprocess
@@ -50,8 +45,8 @@ class PhotoInfoTool:
  {self.Fore.YELLOW}|_|   |_| |_|____/  |_|   \___/|_| \_\_____|
 {self.Fore.GREEN}{'='*45}
 {self.Fore.CYAN}  Developed by: {self.Style.BRIGHT}Somser SA
-{self.Fore.CYAN}  Tool: {self.Style.BRIGHT}ICSF Photo Info Tool
-{self.Fore.CYAN}  GitHub: {self.Style.BRIGHT}https://github.com/somser-sa
+{self.Fore.CYAN}  Tool: {self.Style.BRIGHT}Photo MetaData
+{self.Fore.CYAN}  GitHub: {self.Style.BRIGHT}https://github.com/somser2icsf
 {self.Fore.GREEN}{'='*45}{self.Style.RESET_ALL}""")
 
     def find_image_path(self, image_name):
