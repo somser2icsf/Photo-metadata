@@ -1,14 +1,15 @@
-
 import sys
 import subprocess
 import os
 
 class PhotoInfoTool:
     def __init__(self):
-        self.install_library("colorama")
-        self.install_library("Pillow", "PIL")
-        self.install_library("exifread")
+        # Install required libraries first (no colors yet)
+        self.install_library("colorama", colored=False)
+        self.install_library("Pillow", "PIL", colored=False)
+        self.install_library("exifread", colored=False)
 
+        # Now import and initialize colorama
         from colorama import Fore, Style, init
         from PIL import Image
         import exifread
@@ -20,17 +21,20 @@ class PhotoInfoTool:
         self.Image = Image
         self.exifread = exifread
 
-    def install_library(self, lib, imp=None):
+    def install_library(self, lib, imp=None, colored=True):
         if imp is None:
             imp = lib
         try:
             __import__(imp)
         except ImportError:
-            print(f"{self.Fore.YELLOW}[INFO] Installing {lib}...{self.Style.RESET_ALL}")
+            if colored and hasattr(self, "Fore"):
+                print(f"{self.Fore.YELLOW}[INFO] Installing {lib}...{self.Style.RESET_ALL}")
+            else:
+                print(f"[INFO] Installing {lib}...")
             subprocess.check_call([sys.executable, "-m", "pip", "install", lib])
 
     def print_banner(self):
-        print(f"""{self.Fore.CYAN}{self.Style.BRIGHT}
+        print(rf"""{self.Fore.CYAN}{self.Style.BRIGHT}
 ██╗ ██████╗███████╗███████╗
 ██║██╔════╝██╔════╝██╔════╝
 ██║██║     ███████╗█████╗  
@@ -108,7 +112,6 @@ class PhotoInfoTool:
         print(f"{self.Fore.GREEN}🖼 Format      : {img_format}")
         print(f"{self.Fore.CYAN}{'-'*50}{self.Style.RESET_ALL}")
 
-        # Key EXIF tags to look for:
         keys_of_interest = {
             "Image Make": "Camera Make",
             "Image Model": "Camera Model",
@@ -144,7 +147,6 @@ class PhotoInfoTool:
                         val = str(val)
                 print(f"{self.Fore.YELLOW}{desc}: {self.Fore.WHITE}{val}")
 
-        # GPS Info
         gps_keys = ['GPS GPSLatitude', 'GPS GPSLongitude', 'GPS GPSLatitudeRef', 'GPS GPSLongitudeRef']
         if all(k in exif_data for k in gps_keys):
             try:
@@ -153,7 +155,7 @@ class PhotoInfoTool:
                 print(f"\n{self.Fore.BLUE}🌍 GPS Location:")
                 print(f"   Latitude : {self.Fore.WHITE}{lat}")
                 print(f"   Longitude: {self.Fore.WHITE}{lon}")
-                print(f"   Map Link : {self.Fore.CYAN}https://maps.google.com/?q={lat},{lon}")
+                print(f"   Map Link : {self.Fore.CYAN}https://www.google.com/maps/place/{lat},{lon}")
             except Exception as e:
                 print(f"{self.Fore.RED}❌ Error parsing GPS data: {e}")
         else:
